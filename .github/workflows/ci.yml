@@ -1,0 +1,17 @@
+name: C tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cc: [gcc, clang]
+    env:
+      CC: ${{ matrix.cc }}
+      CFLAGS: -std=c11 -Wall -Wextra -Werror -pedantic -g -fsanitize=address,undefined
+    steps:
+      - uses: actions/checkout@v4
+      - run: make test all
+      - run: ./demo
